@@ -6,7 +6,7 @@
 *  引入的less会对less进行编译存放到css文件夹
 * */
 import '../less/style.less';
-import './app/Element';
+import ElementContoller from './app/Element';
 
 /** The animate() method */
 import './util/fx';
@@ -18,3 +18,4 @@ if (!PIXI.utils.isWebGLSupported()) {
     type = 'canvas';
 }
 PIXI.utils.sayHello(type);
+ElementContoller();

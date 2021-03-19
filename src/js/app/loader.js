@@ -15,18 +15,13 @@ const loaderImgs = {
         texture: '',
         sprite: ''
     },
-    close: {
-        url: `${head}/close.png`,
-        texture: '',
-        sprite: ''
-    },
-    dialogEmpty: {
-        url: `${head}/dialog_bag_empty.png`,
-        texture: '',
-        sprite: ''
-    },
     dialogGolden: {
         url: `${head}/dialog_bag_golden_full.png`,
+        texture: '',
+        sprite: ''
+    },
+    gold: {
+        url: `${head}/gold.png`,
         texture: '',
         sprite: ''
     },

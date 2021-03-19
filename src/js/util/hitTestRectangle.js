@@ -1,10 +1,10 @@
-export default function hitTestRectangle(r1, r2) {
+export default function hitTestRectangle (r1, r2) {
     let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
     hit = false;
     let r1Position = r1.getGlobalPosition();
     let r2Position = r2.getGlobalPosition();
-    r1.centerX = r1Position.x - r1.width / 2;
-    r1.centerY = r1Position.y - r1.height;
+    r1.centerX = r1Position.x + r1.width / 2;
+    r1.centerY = r1Position.y - r1.height / 2;
     r2.centerX = r2Position.x + r2.width / 2;
     r2.centerY = r2Position.y + r2.height / 2;
     r1.halfWidth = r1.width / 2;
