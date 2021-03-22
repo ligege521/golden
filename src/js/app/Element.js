@@ -185,7 +185,7 @@ export default function ElementContoller () {
         let {goldenHook} = loaderImgs;
         let hook = goldenHook.sprite;
         hook.anchor.set(0.5);
-        hook.scale.set(_public.scale, _public.scale);
+        hook.scale.set(_public.scale);
         hook.position.set(hook.width / 2, goldenHander.ropeLength / 2 + hook.height / 2);
 
         // 爪子容器
@@ -196,10 +196,10 @@ export default function ElementContoller () {
 
         // 爪子碰撞检测区域
         let hookGrap = new PIXI.Graphics();
-        // hookGrap.lineStyle(2, 0x009966, 1);
-        hookGrap.drawRoundedRect(-105, -85, 70, 70, 60);
+        hookGrap.lineStyle(2, 0x009966, 1);
+        hookGrap.drawRoundedRect(-hook.width, -hookGrap.height + hook.height / 2, hook.width, hook.height - 20, 60);
         hookGrap.position.set(hookGrap.width, hookGrap.height);
-        hook.addChild(hookGrap);
+        hookBox.addChild(hookGrap);
 
         // // 抓取到的金币
         // let grabSprite = new PIXI.Sprite(PIXI.Texture.fromImage('../../img/gold.png'));
@@ -233,10 +233,6 @@ export default function ElementContoller () {
                 state(delta);
                 return;
             }
-            if (_private.bloodObj.healthValue <= 0) {
-                _private.gameOver();
-                return;
-            }
             _public.app.ticker.remove(delta => ropeLoop(delta));
         };
         function setStatus () {
@@ -253,7 +249,6 @@ export default function ElementContoller () {
             }
         }
         function start () {
-            empty();
             if (goldenHander.ropeBottom && !goldenHander.ropeTop) {
                 goldExtend();
             } else if (goldenHander.ropeTop && !goldenHander.ropeBottom) {
@@ -265,11 +260,12 @@ export default function ElementContoller () {
         */
         function hitGold () {
             if (goldenHander.hitProp) {
+                console.log('返回');
                 return;
             }
             for (let i = 0; i < _private.goldenArea.list.length; i++) {
                 let prop = _private.goldenArea.list[i];
-                if (hitTestRectangle(hookGrap, prop.hitGrap) && prop.visible) {
+                if (hitTestRectangle(hookGrap, prop.hitAre) && prop.visible) {
                     // if (prop.type === 'boom') {
                     //     prop.sprite.visible = false;
                     // }
@@ -314,10 +310,11 @@ export default function ElementContoller () {
         function goldExtend () {
             // 钩子暂停摇摆
             hookAni.pause();
+            hitGold();
             goldenHander.ropeCurrentSpeed += goldenHander.ropeSpeed;
             rope.height += goldenHander.ropeCurrentSpeed;
             hook.y += goldenHander.ropeCurrentSpeed;
-            hitGold();
+            hookGrap.y += goldenHander.ropeCurrentSpeed;
             let gloPosition = hook.getGlobalPosition();
             if ((gloPosition.x) > (_public.designWidth * _public.scale - hookBox.width / 2) || (gloPosition.x * _public.scale) < 0 || rope.height > (goldenHander.ropeMaxLength * _public.scale)) {
                 backHook();
@@ -346,8 +343,12 @@ export default function ElementContoller () {
             }
             rope.height += goldenHander.ropeCurrentSpeed;
             hook.y += goldenHander.ropeCurrentSpeed;
+            hookGrap.y += goldenHander.ropeCurrentSpeed;
             if (rope.height <= goldenHander.ropeLength * _public.scale) {
-                if (goldenHander.hitProp) {
+                empty();
+                if (_private.bloodObj.healthValue <= 0) {
+                    _private.gameOver();
+                } else if (goldenHander.hitProp) {
                     if (prop.sprite.visible && prop.type === 'boom') {
                         prop.sprite.visible = false;
                     }
@@ -422,6 +423,7 @@ export default function ElementContoller () {
                 case 0:
                     sprite = new PIXI.Sprite(PIXI.Texture.fromImage(boom.url));
                     spriteObj = new Parent(sprite, 'boom', -20, true, boom.url, _private.boomDialog);
+                    console.log(sprite.width * _public.scale);
                     break;
                 case 1:
                     sprite = new PIXI.Sprite(PIXI.Texture.fromImage(gold1.url));
@@ -446,16 +448,26 @@ export default function ElementContoller () {
                 case 6:
                     sprite = new PIXI.Sprite(PIXI.Texture.fromImage(boom.url));
                     spriteObj = new Parent(sprite, 'boom', -20, true, boom.url, _private.boomDialog);
+                    console.log(sprite.width);
                     break;
                 default:
                     break;
             }
             // sprite.x = x * _public.scale + (Math.random() * (containerWidth / 2) * _public.scale) + 20;
             // sprite.y = y * _public.scale + (Math.random() * (containerHeight / 2) * _public.scale);
-            sprite.x = x * _public.scale + ((containerWidth / 2) * _public.scale) + 20;
-            sprite.y = y * _public.scale + ((containerHeight / 2) * _public.scale);
+            sprite.x = Math.round(x * _public.scale + ((containerWidth / 2) * _public.scale) + 20);
+            sprite.y = Math.round(y * _public.scale + ((containerHeight / 2) * _public.scale));
             sprite.scale.set(_public.scale);
             sprite.anchor.set(0.5);
+            let global = sprite.getGlobalPosition();
+            let hitAre = {
+                startX: global.x,
+                endX: global.x + sprite.width,
+                startY: global.y,
+                endY: global.y + sprite.height
+            };
+            console.log(hitAre);
+            spriteObj.hitAre = hitAre;
             // 道具的碰撞检测区域
             let hitGrap = new PIXI.Graphics();
             // hitGrap.lineStyle(2, 0x009966, 1);

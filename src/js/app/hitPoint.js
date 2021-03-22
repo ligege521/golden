@@ -1,3 +1,8 @@
 import boom from '../../img/boom.json';
-let polygon = new PIXI.Polygon(boom.boom.shapes[0].polys[0]);
-console.log(polygon);
+let data = boom.boom.shapes[0].polys;
+let pointArr = [];
+data.forEach(item => {
+    let polygon = new PIXI.Polygon(...item);
+    pointArr.push(polygon);
+    // console.log(polygon);
+});
