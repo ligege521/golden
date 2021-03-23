@@ -26,18 +26,17 @@
 //     }
 //     return hit;
 // };
-export default function hitTestRectangle (r1, hitAre) {
+export default function hitTestRectangle (r1, hitAre, scale) {
     let hit;
     hit = false;
     let r1Position = r1.getGlobalPosition();
     r1.startX = r1Position.x;
     r1.endX = r1Position.x + r1.width;
     r1.startY = r1Position.y;
-    r1.endY = r1Position.y + r1.height;
+    r1.endY = r1Position.y + r1.height / 2;
     if ((r1.startX > hitAre.startX && r1.startX < hitAre.endX) || (r1.endX > hitAre.startX && r1.endX < hitAre.endX)) {
         if ((r1.startY > hitAre.startY && r1.startY < hitAre.endY) || (r1.endY > hitAre.startY && r1.endX < hitAre.endY)) {
             hit = true;
-            console.log(r1.startY, r1.endY);
         } else {
             hit = false;
         }

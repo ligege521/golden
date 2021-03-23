@@ -197,15 +197,24 @@ export default function ElementContoller () {
         // 爪子碰撞检测区域
         let hookGrap = new PIXI.Graphics();
         hookGrap.lineStyle(2, 0x009966, 1);
-        hookGrap.drawRoundedRect(-hook.width, -hookGrap.height + hook.height / 2, hook.width, hook.height - 20, 60);
+        hookGrap.drawRoundedRect(-hook.width, -hookGrap.height, hookBox.width, hookBox.height, 0);
+        // hookGrap.position.set(-hook.width, -hookGrap.height - 10);
         hookGrap.position.set(hookGrap.width, hookGrap.height);
         hookBox.addChild(hookGrap);
+        setTimeout(() => {
+            console.log(hookGrap.getGlobalPosition());
+            console.log();
+        }, 2000);
 
         // // 抓取到的金币
-        // let grabSprite = new PIXI.Sprite(PIXI.Texture.fromImage('../../img/gold.png'));
-        // grabSprite.anchor.set(0.5);
-        // // grabSprite.scale.set(_public.scale);
-        // grabSprite.position.set(grabSprite.width, goldenHander.ropeLength);
+        let grabSprite = new PIXI.Sprite(PIXI.Texture.fromImage('../../img/gold.png'));
+        setTimeout(() => {
+            grabSprite.anchor.set(0.5);
+            hookBox.addChild(grabSprite);
+            grabSprite.scale.set(_public.scale);
+            console.log(grabSprite.width);
+            grabSprite.position.set(grabSprite.width, goldenHander.ropeLength);
+        }, 5000);
 
         // 绳子
         let rope = new PIXI.Graphics();
@@ -265,7 +274,7 @@ export default function ElementContoller () {
             }
             for (let i = 0; i < _private.goldenArea.list.length; i++) {
                 let prop = _private.goldenArea.list[i];
-                if (hitTestRectangle(hookGrap, prop.hitAre) && prop.visible) {
+                if (hitTestRectangle(hookGrap, prop.hitAre, _public.scale) && prop.visible) {
                     // if (prop.type === 'boom') {
                     //     prop.sprite.visible = false;
                     // }
@@ -275,7 +284,6 @@ export default function ElementContoller () {
                     _private.goldenArea.hitIndex = i;
                     backHook(prop);
                     addIntegral(prop.integral);
-                    _public.showMesk = true;
                     return;
                 }
             };
@@ -336,7 +344,7 @@ export default function ElementContoller () {
             let prop = _private.goldenArea.list[_private.goldenArea.hitIndex];
             goldenHander.ropeCurrentSpeed -= goldenHander.ropeSpeed;
             if (goldenHander.hitProp) {
-                prop.sprite.position.set(hook.getGlobalPosition().x, hook.y + hook.height);
+                prop.sprite.position.set(hookGrap.getGlobalPosition().x, hookGrap.y + hookGrap.height);
                 if (prop.type === 'gold') {
                     goldenHander.ropeCurrentSpeed = -1;
                 }
@@ -353,6 +361,7 @@ export default function ElementContoller () {
                         prop.sprite.visible = false;
                     }
                     prop.callback();
+                    _public.showMesk = true;
                 }
                 goldenHander.ropeBottom = true;
                 goldenHander.ropeTop = false;
@@ -364,6 +373,9 @@ export default function ElementContoller () {
             }
         };
         $('.m-index')[0].addEventListener('touchstart', setStatus);
+        // _private.propsContainer.on('tap', (event) => {
+        //     setStatus();
+        // });
         return hookBox;
     };
     /*
@@ -383,8 +395,12 @@ export default function ElementContoller () {
     _private.initProps = function () {
         let propsContainer = _private.propsContainer = new PIXI.Container();
         propsContainer.y = 100;
+        propsContainer.width = _public.app.stage.width - 20;
+        propsContainer.height = _public.app.stage.height - 100;
         _public.app.stage.addChild(propsContainer);
         _private.addProps();
+
+        propsContainer.interactive = true;
     };
     _private.addProps = function () {
         let propsContainer = _private.propsContainer;
