@@ -76,3 +76,64 @@ body {
 	width: 100%;
 	height: 100%;
 }
+
+
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td { 
+    margin:0; padding:0;
+}
+  
+ol,ul,li { 
+    list-style:none;
+}
+
+body{
+    background-color: #3e2411;
+
+    .loading-content {
+        display: none;
+    }
+}
+
+body.loading{
+    width: 100%;
+    height: 100vh;
+    background-size: cover;
+    background-color: #000;
+    position: relative;
+
+    .loading-content{
+        width: 5.8rem;
+        height: 5.4rem;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: absolute;
+
+        .bar-progress{
+            font-size: 0.4rem;
+            text-align: center;
+            color: #ff6633;
+        }
+    }
+}
+
+.animate-bounce{
+    animation-duration: 1.5s; 
+    animation-name: bounce-up-down;
+    animation-iteration-count: infinite;
+  }
+  
+  @keyframes bounce-up-down{
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-0.3rem);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
